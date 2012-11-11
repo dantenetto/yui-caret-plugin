@@ -1,10 +1,10 @@
-#YUI Caret Plugin for Node interface
+# YUI Caret Plugin for Node interface
 
 Node plugin to manipulate the caret of inputs and textareas.
 
 <strong>Note</strong>:This plugin only works with input or textarea nodes. (<code><em>node</em>.caret</code>)<br>
 <dl>
-    <dt>##Methods:##</dt>
+    <dt><h2>Methods:</h2></dt>
     <dd>
         <dl>
             <dt><code>isValidNode()</code>:</dt>
@@ -18,7 +18,7 @@ Node plugin to manipulate the caret of inputs and textareas.
             <dd>select all the content inside the textarea/input.</dd>
         </dl>
     </dd>
-    <dt>##Attributes:##</dt>
+    <dt><h2>Attributes:</h2></dt>
     <dd>
         <dl>
             <dt><code>selectionStart</code>:</dt>
