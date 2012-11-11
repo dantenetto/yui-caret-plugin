@@ -4,7 +4,7 @@ Node plugin to manipulate the caret of inputs and textareas.
 
 <strong>Note</strong>:This plugin only works with input or textarea nodes. (<code><em>node</em>.caret</code>)<br>
 <dl>
-    <dt><em>Methods</em>:</dt>
+    <dt>##Methods:##</dt>
     <dd>
         <dl>
             <dt><code>isValidNode()</code>:</dt>
@@ -18,7 +18,7 @@ Node plugin to manipulate the caret of inputs and textareas.
             <dd>select all the content inside the textarea/input.</dd>
         </dl>
     </dd>
-    <dt><em>Attributes</em>:</dt>
+    <dt>##Attributes:##</dt>
     <dd>
         <dl>
             <dt><code>selectionStart</code>:</dt>
