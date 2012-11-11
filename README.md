@@ -1,4 +1,4 @@
-# YUI Caret Plugin for Node interface
+# YUI Caret Plugin interface for Node
 
 Node plugin to manipulate the caret of inputs and textareas.
 
