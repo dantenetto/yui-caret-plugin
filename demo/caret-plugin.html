@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<title>YUI Caret Plugin for Node</title>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+
+<h1>YUI Caret Plugin for Node interface</h1>
+<a href="#demos">go to demos</a>
+<p><strong>This plugin only works with input or textarea nodes.</strong> (<code><em>node</em>.caret</code>)<br>
+<dl>
+    <dt><em>Methods</em>:</dt>
+    <dd>
+        <dl>
+            <dt><code>isValidNode()</code>:</dt>
+            <dd>checks if this node is a textarea or a valid type input.</dd>
+            <dt><code>insert(content)</code>:</dt>
+            <dd>insert the content at the current caret position in the textarea/input as if the
+                user itself had typed.</dd>
+            <dt><code>clearSelection()</code>:</dt>
+            <dd>deselect the actual selection and place the caret at the begining.</dd>
+            <dt><code>selectAll()</code>:</dt>
+            <dd>select all the content inside the textarea/input.</dd>
+        </dl>
+    </dd>
+    <dt><em>Attributes</em>:</dt>
+    <dd>
+        <dl>
+            <dt><code>selectionStart</code>:</dt>
+            <dd>gets or sets the start of a selection in the node.</dd>
+            <dt><code>selectionEnd</code>:</dt>
+            <dd>gets or sets the end of a selection in the node.</dd>
+            <dt><code>range</code>:</dt>
+            <dd>gets an object like <code>{start: #, end: #}</code>, where the <em>#</em> is the index
+                number of the start and end indexes of the selection.<br>(in case the caret isn't
+                selecting anything, the start and end will be the same)<br>
+                sets the selection passing an object like<code>{start: #, end: #}</code>.</dd>
+            <dt><code>position</code>:</dt>
+            <dd>gets or sets the position of the caret. If the node has a selection, getting the
+                position will return the begining of the selection.</dd>
+            <dt><code>content</code>:</dt>
+            <dd>gets selected content.<br>
+                setting content will insert the new content replacing the selected content and
+                keeping the selection.</dd>
+        </dl>
+    </dd>
+</dl>
+</p>
+<hr>
+
+<a name="demos" id="demos"></a>
+<h1>Demos</h1>
+<h2>#1. Get selection indexes and content</h2>
+<p>Mouse select a portion of the input/textarea content bellow. (or place the caret somewhere)</p>
+<div id="get-selection-input">
+    <input type="text" value="0123456789">
+    <pre class="output"></pre>
+</div>
+<div id="get-selection-textarea">
+    <textarea>0123456789
+0123456789</textarea> <span style="vertical-align:top">the <em style="vertical-align:inherit">\n</em> is counted</span>
+    <pre class="output"></pre>
+</div>
+<hr>
+
+<h2>#2. Get and Set the position of the caret</h2>
+<div id="position-input">
+    <input type="text" value="0123456789">
+    <pre class="output"><label>position:<input type="text" size="3"></label><button class='set'>set</button><button class='get'>get</button>
+    </pre>
+</div>
+<div id="position-textarea">
+    <textarea>0123456789</textarea>
+    <pre class="output"><label>position:<input type="text" size="3"></label><button class='set'>set</button><button class='get'>get</button>
+    </pre>
+</div>
+<hr>
+
+<h2>#3. Manipulating selected content</h2>
+<p>Select a portion of the textarea/input bellow than get or set a content.</p>
+<div id="content-input">
+    <input type="text" value="0123456789">
+    <pre class="output"><label>content:<input type="text" size="5"></label><button class='set'>set</button><button class='get'>get</button>
+    </pre>
+</div>
+<div id="content-textarea">
+    <textarea>0123456789</textarea>
+    <pre class="output"><label>position:<input type="text" size="5"></label><button class='set'>set</button><button class='get'>get</button>
+    </pre>
+</div>
+<hr>
+
+<h2>#4. Simulating user typing</h2>
+<p>Put a content to be "typed" and press type to simulate a user typing.</p>
+<div id="typing">
+    <pre><label>content:<input id="typing-content" size="50" type="text" value="The lazy dog jumps over the quick brown fox."></label>
+  <label>delay:<input id="typing-delay" size="4" type="text" value="100"></label><button>type</button>
+    </pre>
+    <form>
+    <textarea cols="25"></textarea><br>
+    <input size="50" type="text"><br>
+    <input type="reset" value="clear text">
+    </form>
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+
+<script src="http://yui.yahooapis.com/3.7.3/build/yui/yui-min.js"></script>
+<script src="../caret-plugin.js"></script>
+<script type="text/javascript">
+
+//publishing the Y to enable console access
+window.Y = YUI().use('node', 'event', 'caret-plugin', function (Y) {
+    var L = Y.Lang;
+
+    //applying the plugin in the Node class
+    //off course it can be pluged only in the node instance needed
+    Y.Node.plug(Y.Plugin.Caret);
+
+    //=====[ DEMO #1 ]=====
+    function getSelectionHandler(e) {
+        var output = 'start: {start}, end: {end}\ncontent: \n{content}';
+
+        e.container.one('.output').setHTML(L.sub(output, {
+                start: e.target.caret.get('selectionStart'),
+                end: e.target.caret.get('selectionEnd'),
+                content: e.target.caret.get('content')
+            })
+        );
+    }
+
+    Y.delegate('mouseup', getSelectionHandler, '#get-selection-input', 'input');
+    Y.delegate('mouseup', getSelectionHandler, '#get-selection-textarea', 'textarea');
+
+
+    //=====[ DEMO #2 ]=====
+    function getPosition(e) {
+        var position = e.container.one('>input, >textarea').caret.get('position');
+
+        e.container.one('.output input').set('value', position);
+    }
+
+    function setPosition(e) {
+        var position = e.container.one('.output input').get('value') || '0';
+
+        e.container.one('>input, >textarea').caret.set('position', position);
+    }
+
+    Y.delegate('click', getPosition, '#position-input', '.get');
+    Y.delegate('click', setPosition, '#position-input', '.set');
+    Y.delegate('click', getPosition, '#position-textarea', '.get');
+    Y.delegate('click', setPosition, '#position-textarea', '.set');
+
+
+    //=====[ DEMO #3 ]=====
+    function getContent(e) {
+        var content = e.container.one('>input, >textarea').caret.get('content');
+
+        e.container.one('.output input').set('value', content);
+    }
+
+    function setContent(e) {
+        var content = e.container.one('.output input').get('value');
+
+        e.container.one('>input, >textarea').caret.set('content', content);
+    }
+
+    Y.delegate('click', getContent, '#content-input', '.get');
+    Y.delegate('click', setContent, '#content-input', '.set');
+    Y.delegate('click', getContent, '#content-textarea', '.get');
+    Y.delegate('click', setContent, '#content-textarea', '.set');
+
+
+    //=====[ DEMO #4 ]=====
+    function typeContent(e) {
+        var content, delay,
+            input, textarea,
+            interval;
+
+        content = e.container.one('#typing-content').get('value');
+        delay = e.container.one('#typing-delay').get('value');
+
+        if (arguments.callee.typing) {
+            window.clearInterval(arguments.callee.typing);
+        }
+
+        input = e.container.one('form>input');
+        textarea = e.container.one('form>textarea');
+
+        //arguments.callee is used just to create a typing property.
+        //any closure variable would do.
+        arguments.callee.typing = interval = window.setInterval(function () {
+            arguments.callee.i || (arguments.callee.i = 0);
+
+            if (arguments.callee.i < content.length) {
+                    //using the insert method to insert a content in the current caret position
+                    input.caret.insert(content[arguments.callee.i]);
+                    textarea.caret.insert(content[arguments.callee.i]);
+                    arguments.callee.i += 1;
+            } else {
+                window.clearInterval(interval);
+            }
+        }, delay);
+    }
+
+    Y.delegate('click', typeContent, '#typing', 'button');
+        
+});
+</script>
